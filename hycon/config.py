@@ -1,6 +1,6 @@
-API_ID = $api_id
-API_HASH = '$api_HASH'
-BOT_TOKEN = '$bot_token'
+API_ID = $API_ID1
+API_HASH = $API_HASH
+BOT_TOKEN = $BOT_TOKEN
 
 PREFIXES = ['/', '!']
 SUDO_USERS = []
