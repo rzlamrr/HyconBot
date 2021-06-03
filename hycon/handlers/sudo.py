@@ -30,3 +30,13 @@ async def on_restart_m(c: Client, m: Message):
 async def on_shutdown_m(c: Client, m: Message):
     await m.reply_text("Sleeping...")
     sys.exit()
+
+
+@Client.on_message(filters.sudo & filters.cmd('logs'))
+async def logfile(c: Client, m: Message):
+    await m.delete()
+    if m.reply_to_message:
+        m = m.reply_to_message
+    with open('log.txt', 'rb') as f:
+        await c.send_document(document=f, file_name=f.name,
+                              chat_id=m.from_user.id)

@@ -14,13 +14,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import os
 
 from pyrogram import Client
-from .config import API_HASH, API_ID, BOT_TOKEN
 
 from rich import box, print
 from rich.logging import RichHandler
 from rich.panel import Panel
+
+from .config import API_HASH, API_ID, BOT_TOKEN
+
+if os.path.exists('log.txt'):
+    with open('log.txt', 'r+') as f:
+        f.truncate(0)
 
 # Logging colorized by rich
 FORMAT = "%(message)s"
@@ -28,7 +34,10 @@ logging.basicConfig(
     level="INFO",
     format=FORMAT,
     datefmt="[%X]",
-    handlers=[RichHandler(rich_tracebacks=True)],
+    handlers=[
+        RichHandler(rich_tracebacks=True),
+        logging.FileHandler('log.txt')],
+
 )
 
 # To avoid some pyrogram annoying log

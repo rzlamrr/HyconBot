@@ -1,5 +1,8 @@
 humanize==3.2.0
+kantex==0.2.0
 Pyrogram==1.1.13
 pyromod==1.5
 rapidjson==1.0.0
+requests==2.25.1
 rich==9.10.0
+TgCrypto==1.2.2

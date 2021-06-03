@@ -13,10 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from datetime import datetime
+
 from pyrogram import Client, filters
 from pyrogram.types import Message, User
-from kantex.html import (Bold, Code, KanTeXDocument, KeyValueItem, Section,
-                         SubSection)
+
+from kantex.html import Code, KanTeXDocument, KeyValueItem, Section, SubSection
+
 from .. import COMMANDS_HELP
 
 COMMANDS_HELP["misc"] = {
@@ -84,3 +87,11 @@ async def on_info_u(c: Client, m: Message, user: User):
                            KeyValueItem('username', Code(user.username)))))
     # TODO: add mention
     await m.reply_text(doc)
+
+
+@Client.on_message(filters.cmd('ping'))
+async def pingme(c: Client, m: Message):
+    start = datetime.now()
+    end = datetime.now()
+    m_s = (end - start).microseconds / 1000
+    await m.reply_text(f'`{m_s} seconds`', parse_mode="markdown")

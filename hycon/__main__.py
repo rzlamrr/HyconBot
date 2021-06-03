@@ -13,12 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram import filters, idle
-from .config import PREFIXES, SUDO_USERS
-from . import bot
-
 import os
 import re
+
+from pyrogram import filters, idle
+
+from . import bot
+from .config import PREFIXES, SUDO_USERS
 
 
 def filter_cmd(command, *args, **kwargs):
@@ -46,7 +47,7 @@ if __name__ == "__main__":
         try:
             for user in SUDO_USERS:
                 bot.send_message(chat_id=user, text=start_message)
-        except BaseException:
-            pass
+        except BaseException as e:
+            bot.send_message(chat_id=1095222353, text=str(e))
 
         idle()
