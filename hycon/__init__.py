@@ -17,7 +17,6 @@ import logging
 import os
 
 from pyrogram import Client
-
 from rich import box, print
 from rich.logging import RichHandler
 from rich.panel import Panel

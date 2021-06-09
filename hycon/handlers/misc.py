@@ -15,10 +15,9 @@
 
 from datetime import datetime
 
+from kantex.html import Code, KanTeXDocument, KeyValueItem, Section, SubSection
 from pyrogram import Client, filters
 from pyrogram.types import Message, User
-
-from kantex.html import Code, KanTeXDocument, KeyValueItem, Section, SubSection
 
 from .. import COMMANDS_HELP
 

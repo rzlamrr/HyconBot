@@ -17,11 +17,10 @@ import datetime
 import json
 from typing import Dict, List
 
+import humanize
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import CallbackQuery, Message
-
-import humanize
 from pyromod.helpers import ikb
 
 from .. import COMMANDS_HELP

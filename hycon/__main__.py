@@ -44,6 +44,7 @@ if __name__ == "__main__":
     with bot:
         bot.me = bot.get_me()
         start_message = 'HyconBot started!'
+
         try:
             for user in SUDO_USERS:
                 bot.send_message(chat_id=user, text=start_message)
