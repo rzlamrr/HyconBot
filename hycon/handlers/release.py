@@ -60,7 +60,7 @@ async def release_m(c: Client, m: Message):
 
     changelogs = f'https://github.com/HyconOS-Releases/{codename}/blob/main/devicechangelog.md'
     source = 'https://github.com/HyconOS-Releases/Source_Changelog#readme'
-    durl = f'https://github.com/HyconOS-Releases/{codename}/releases/download/v{VERSION}/{filename}'
+    durl = f'https://github.com/HyconOS-Releases/{codename}/releases/download/V{VERSION}/{filename}'
 
     text = f'#Hycon #Official #{vcode} #{codename}\n\n'
     text += 'Hycon OS ' + VERSION + f' | {vname} | {depis}\n'
@@ -75,7 +75,10 @@ async def release_m(c: Client, m: Message):
         ]
     )
 
-    await c.send_photo(chat_id=UPDATES_CHANEL, photo=file_path, caption=text, reply_markup=keyboard, parse_mode="md")
+    try:
+        await c.send_photo(chat_id=UPDATES_CHANEL, photo=file_path, caption=text, reply_markup=keyboard, parse_mode="md")
+    except Exception as e:
+        await t.edit(text="!!FAILED: " + str(e))
     os.remove(file_path)
 
 
