@@ -20,16 +20,16 @@ import requests
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from hycon.config import UPDATES_CHANEL, VERSION
+from hycon.config import UPDATES_CHANEL
 
 from .devices import check_device
 
-#DEVICES_REPO = 'https://github.com/Hycon-Devices/official_devices/raw/master'
 DEVICES_REPO = 'https://raw.githubusercontent.com/Hycon-Devices/official_devices/master'
 
 
-@Client.on_message(filters.sudo & filters.cmd('release (?P<codename>.+)'))
+@Client.on_message(filters.sudo & filters.cmd('release (?P<ver>.+) (?P<codename>.+)'))
 async def release_m(c: Client, m: Message):
+    vtag = m.matches[0]['ver']
     codename = m.matches[0]['codename']
     model = check_device(codename)
     try:
@@ -60,10 +60,10 @@ async def release_m(c: Client, m: Message):
 
     changelogs = f'https://github.com/HyconOS-Releases/{codename}/blob/main/devicechangelog.md'
     source = 'https://github.com/HyconOS-Releases/Source_Changelog#readme'
-    durl = f'https://github.com/HyconOS-Releases/{codename}/releases/download/V{VERSION}/{filename}'
+    durl = f'https://github.com/HyconOS-Releases/{codename}/releases/download/V{vtag}/{filename}'
 
     text = f'#Hycon #Official #{vcode} #{codename}\n\n'
-    text += 'Hycon OS ' + VERSION + f' | {vname} | {depis}\n'
+    text += f'Hycon OS {vtag} | {vname} | {depis}\n'
     text += f'Changelog: [Device]({changelogs}) | [Source]({source})\n\n'
     text += f'Maintainer: {maintainer}'
     keyboard = InlineKeyboardMarkup(
