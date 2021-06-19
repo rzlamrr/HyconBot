@@ -23,6 +23,8 @@ from pyrogram import Client, filters
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
 
+from hycon.config import SUDO_USERS
+
 from .. import COMMANDS_HELP
 
 COMMANDS_HELP["devices"] = {
@@ -136,7 +138,7 @@ def get_changelog(device: str, filename: str) -> str:
     return changelog
 
 
-@Client.on_callback_query(filters.regex('^get_builds (?P<id>\\d+) (?P<page>\\d+)$'))
+@Client.on_callback_query(filters.regex('^get_builds (?P<id>\d+) (?P<page>\d+)$'))
 async def on_get_builds_cq(c: Client, cq: CallbackQuery):
     id = int(cq.matches[0]['id'])
     page = int(cq.matches[0]['page'])
@@ -180,14 +182,14 @@ async def on_get_builds_cq(c: Client, cq: CallbackQuery):
             if len(page_keyboard) > 0:
                 keyboard.append(page_keyboard)
             keyboard.append([('🔙 Back', f'get_device {id}')])
-            keyboard.append([('❌ Close', 'cls')])
+            keyboard.append([('❌ Close', f'cls {id}')])
             kwargs = {
                 'reply_markup': ikb(keyboard)
             }
             await cq.edit_message_text(text=text, **kwargs)
 
 
-@Client.on_callback_query(filters.regex('^get_device (?P<id>\\d+)$'))
+@Client.on_callback_query(filters.regex('^get_device (?P<id>\d+)$'))
 async def on_get_device_cq(c: Client, cq: CallbackQuery):
     id = int(cq.matches[0]['id'])
     builds = BUILDS[str(id)]
@@ -199,7 +201,7 @@ async def on_get_device_cq(c: Client, cq: CallbackQuery):
 
 
 @Client.on_callback_query(filters.regex(
-    '^get_changelog (?P<id>\\d+) (?P<page>\\d+)$'))
+    '^get_changelog (?P<id>\d+) (?P<page>\d+)$'))
 async def on_get_changelog_cq(c: Client, cq: CallbackQuery):
     id = int(cq.matches[0]['id'])
     page = int(cq.matches[0]['page'])
@@ -217,11 +219,17 @@ async def on_get_changelog_cq(c: Client, cq: CallbackQuery):
             text += f'\n<b>Changelog</b>: \n<code>{changelog}</code>\n'
             keyboard = [
                 [('🔙 Back', f'get_builds {id} {page}')],
-                [('❌ Close', 'cls')]
+                [('❌ Close', f'cls {id}')]
             ]
             await cq.edit_message_text(text=text, reply_markup=ikb(keyboard))
 
 
-@Client.on_callback_query(filters.regex('^cls'))
+@Client.on_callback_query(filters.regex('^cls (?P<id>\d+)$'))
 async def close_menu(c, cq):
-    await cq.message.delete()
+    id = int(cq.matches[0]['id'])
+    builds = BUILDS[str(id)]
+    if (cq.message.chat.id == builds['chat_id']
+            or cq.message.chat.id in SUDO_USERS):
+        await cq.message.delete()
+    else:
+        await cq.answer("No Way!", show_alert=True)
