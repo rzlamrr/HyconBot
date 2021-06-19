@@ -211,8 +211,8 @@ async def on_get_changelog_cq(c: Client, cq: CallbackQuery):
             text = '<b>HyconOS changelog</b>\n\n'
             text += f'<b>File name</b>: <code>{build["filename"]}</code>\n'
             changelog = build['changelog']
-            # trunc changelogs if greater than 4000 chars
-            changelog = (changelog[:4000] +
+            changelog = changelog.split("-" * 10)[0]
+            changelog = (changelog[:2000] +
                          '...') if len(changelog) > 4000 else changelog
             text += f'\n<b>Changelog</b>: \n<code>{changelog}</code>\n'
             keyboard = [
