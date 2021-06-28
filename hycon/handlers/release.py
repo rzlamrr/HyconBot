@@ -60,7 +60,7 @@ async def release_m(c: Client, m: Message):
 
     changelogs = f'https://github.com/HyconOS-Releases/{codename}/blob/main/devicechangelog.md'
     source = 'https://github.com/HyconOS-Releases/Source_Changelog#readme'
-    durl = f'https://github.com/HyconOS-Releases/{codename}/releases/download/V{vtag}/{filename}'
+    durl = f'https://www.pling.com/p/1544683/'
 
     text = f'#Hycon #Official #{vcode} #{codename}\n\n'
     text += f'Hycon OS {vtag} | {vname} | {depis}\n'
