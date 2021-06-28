@@ -24,48 +24,47 @@ from hycon.config import UPDATES_CHANEL
 
 from .devices import check_device
 
-DEVICES_REPO = 'https://raw.githubusercontent.com/Hycon-Devices/official_devices/master'
+DEVICES_REPO = "https://raw.githubusercontent.com/Hycon-Devices/official_devices/master"
 
 
-@Client.on_message(filters.sudo & filters.cmd('release (?P<ver>.+) (?P<codename>.+)'))
+@Client.on_message(filters.sudo & filters.cmd("release (?P<ver>.+) (?P<codename>.+)"))
 async def release_m(c: Client, m: Message):
-    vtag = m.matches[0]['ver']
-    codename = m.matches[0]['codename']
+    vtag = m.matches[0]["ver"]
+    codename = m.matches[0]["codename"]
     model = check_device(codename)
     try:
         file_path = await c.download_media(message=m.reply_to_message)
     except Exception:
-        return await m.reply_text(text=f'Reply to media!')
+        return await m.reply_text(text=f"Reply to media!")
     if not model:
-        return await m.reply_text(text=f'The device <b>{codename}</b> was not found!')
+        return await m.reply_text(text=f"The device <b>{codename}</b> was not found!")
     t = await m.reply_text("Processing")
-    models = json.loads(requests.get(DEVICES_REPO + '/devices.json').text)
+    models = json.loads(requests.get(DEVICES_REPO + "/devices.json").text)
     for m in models:
-        if m['codename'] == codename:
-            depis = m['name']
-            for n in m['supported_versions']:
-                maintainer = n['maintainer_name']
-                vname = n['version_name']
-                vcode = n['version_code']
-                xda = n['xda_thread']
+        if m["codename"] == codename:
+            depis = m["name"]
+            for n in m["supported_versions"]:
+                maintainer = n["maintainer_name"]
+                vname = n["version_name"]
+                vcode = n["version_code"]
+                xda = n["xda_thread"]
     await t.edit(text=f"Device: {depis}")
     vcode = v_code(vcode)
 
-    data = json.loads(
-        requests.get(
-            DEVICES_REPO +
-            f'/builds/{codename}.json').text)
+    data = json.loads(requests.get(DEVICES_REPO + f"/builds/{codename}.json").text)
     for item in data:
-        filename = item['filename']
+        filename = item["filename"]
 
-    changelogs = f'https://github.com/HyconOS-Releases/{codename}/blob/main/devicechangelog.md'
-    source = 'https://github.com/HyconOS-Releases/Source_Changelog#readme'
-    durl = f'https://www.pling.com/p/1544683/'
+    changelogs = (
+        f"https://github.com/HyconOS-Releases/{codename}/blob/main/devicechangelog.md"
+    )
+    source = "https://github.com/HyconOS-Releases/Source_Changelog#readme"
+    durl = f"https://www.pling.com/p/1544683/"
 
-    text = f'#Hycon #Official #{vcode} #{codename}\n\n'
-    text += f'Hycon OS {vtag} | {vname} | {depis}\n'
-    text += f'Changelog: [Device]({changelogs}) | [Source]({source})\n\n'
-    text += f'Maintainer: {maintainer}'
+    text = f"#Hycon #Official #{vcode} #{codename}\n\n"
+    text += f"Hycon OS {vtag} | {vname} | {depis}\n"
+    text += f"Changelog: [Device]({changelogs}) | [Source]({source})\n\n"
+    text += f"Maintainer: {maintainer}"
     keyboard = InlineKeyboardMarkup(
         [
             [
@@ -76,17 +75,18 @@ async def release_m(c: Client, m: Message):
     )
 
     try:
-        await c.send_photo(chat_id=UPDATES_CHANEL, photo=file_path, caption=text, reply_markup=keyboard, parse_mode="md")
+        await c.send_photo(
+            chat_id=UPDATES_CHANEL,
+            photo=file_path,
+            caption=text,
+            reply_markup=keyboard,
+            parse_mode="md",
+        )
     except Exception as e:
         await t.edit(text="!!FAILED: " + str(e))
     os.remove(file_path)
 
 
 def v_code(arg):
-    ver = {
-        "nine": "A9",
-        "ten": "A10",
-        "eleven": "A11",
-        "twelve": "A12"
-    }
+    ver = {"nine": "A9", "ten": "A10", "eleven": "A11", "twelve": "A12"}
     return ver.get(arg, "A11")
