@@ -25,7 +25,8 @@ from hycon.config import UPDATES_CHANEL
 DEVICES_REPO = "https://raw.githubusercontent.com/Hycon-Devices/official_devices/master"
 
 
-@Client.on_message(filters.sudo & filters.cmd("release (?P<ver>.+) (?P<codename>.+)"))
+@Client.on_message(filters.sudo
+                   & filters.cmd("release (?P<ver>.+) (?P<codename>.+)"))
 async def release_m(c: Client, m: Message):
     vtag = m.matches[0]["ver"]
     codename = m.matches[0]["codename"]
@@ -35,7 +36,8 @@ async def release_m(c: Client, m: Message):
     except Exception:
         return await m.reply_text(text=f"Reply to media!")
     if not model:
-        return await m.reply_text(text=f"The device <b>{codename}</b> was not found!")
+        return await m.reply_text(
+            text=f"The device <b>{codename}</b> was not found!")
     t = await m.reply_text("Processing")
     models = json.loads(requests.get(DEVICES_REPO + "/devices.json").text)
     for m in models:
@@ -49,7 +51,8 @@ async def release_m(c: Client, m: Message):
     await t.edit(text=f"Device: {depis}")
     vcode = v_code(vcode)
 
-    data = json.loads(requests.get(DEVICES_REPO + f"/builds/{codename}.json").text)
+    data = json.loads(
+        requests.get(DEVICES_REPO + f"/builds/{codename}.json").text)
     for item in data:
         filename = item["filename"]
 
@@ -63,14 +66,10 @@ async def release_m(c: Client, m: Message):
     text += f"Hycon OS {vtag} | {vname} | {depis}\n"
     text += f"Changelog: [Device]({changelogs}) | [Source]({source})\n\n"
     text += f"Maintainer: {maintainer}"
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton("XDA", url=f"{xda}"),
-                InlineKeyboardButton("Download", url=f"{durl}"),
-            ]
-        ]
-    )
+    keyboard = InlineKeyboardMarkup([[
+        InlineKeyboardButton("XDA", url=f"{xda}"),
+        InlineKeyboardButton("Download", url=f"{durl}"),
+    ]])
 
     try:
         await c.send_photo(
